@@ -5,7 +5,8 @@ import java.sql.Date;
 
 public class Seller implements Serializable {
 
-    private int Id;
+ 	private static final long serialVersionUID = 1L;
+	private int Id;
     private String Name;
     private String Email;
     private Date Birthdate;
@@ -14,6 +15,17 @@ public class Seller implements Serializable {
     
     public Seller() {
     }
+    
+	public Seller(int id, String name, String email, Date birthdate, Double baseSalary, int departmentId) {
+		Id = id;
+		Name = name;
+		Email = email;
+		Birthdate = birthdate;
+		BaseSalary = baseSalary;
+		DepartmentId = departmentId;
+	}
+
+
 
 	public int getId() {
 		return Id;
@@ -62,5 +74,34 @@ public class Seller implements Serializable {
 	public void setDepartmentId(int departmentId) {
 		DepartmentId = departmentId;
 	}
+
+	@Override
+	public int hashCode() {
+		final int prime = 31;
+		int result = 1;
+		result = prime * result + Id;
+		return result;
+	}
+
+	@Override
+	public boolean equals(Object obj) {
+		if (this == obj)
+			return true;
+		if (obj == null)
+			return false;
+		if (getClass() != obj.getClass())
+			return false;
+		Seller other = (Seller) obj;
+		if (Id != other.Id)
+			return false;
+		return true;
+	}
+
+	@Override
+	public String toString() {
+		return "Seller [Id=" + Id + ", Name=" + Name + ", Email=" + Email + ", Birthdate=" + Birthdate + ", BaseSalary="
+				+ BaseSalary + ", DepartmentId=" + DepartmentId + "]";
+	}
     
+	
 }
