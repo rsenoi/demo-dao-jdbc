@@ -1,7 +1,7 @@
 package br.com.trainning.model;
 
 import java.io.Serializable;
-import java.sql.Date;
+import java.util.Date;
 
 public class Seller implements Serializable {
 
@@ -11,21 +11,19 @@ public class Seller implements Serializable {
     private String Email;
     private Date Birthdate;
     private Double BaseSalary;
-    private int DepartmentId;
+    private Department department;
     
     public Seller() {
     }
-    
-	public Seller(int id, String name, String email, Date birthdate, Double baseSalary, int departmentId) {
+
+	public Seller(int id, String name, String email, Date birthdate, Double baseSalary, Department department) {
 		Id = id;
 		Name = name;
 		Email = email;
 		Birthdate = birthdate;
 		BaseSalary = baseSalary;
-		DepartmentId = departmentId;
+		this.department = department;
 	}
-
-
 
 	public int getId() {
 		return Id;
@@ -67,12 +65,16 @@ public class Seller implements Serializable {
 		BaseSalary = baseSalary;
 	}
 
-	public int getDepartmentId() {
-		return DepartmentId;
+	public Department getDepartment() {
+		return department;
 	}
 
-	public void setDepartmentId(int departmentId) {
-		DepartmentId = departmentId;
+	public void setDepartment(Department department) {
+		this.department = department;
+	}
+
+	public static long getSerialversionuid() {
+		return serialVersionUID;
 	}
 
 	@Override
@@ -100,8 +102,8 @@ public class Seller implements Serializable {
 	@Override
 	public String toString() {
 		return "Seller [Id=" + Id + ", Name=" + Name + ", Email=" + Email + ", Birthdate=" + Birthdate + ", BaseSalary="
-				+ BaseSalary + ", DepartmentId=" + DepartmentId + "]";
+				+ BaseSalary + ", department=" + department + "]";
 	}
     
-	
+
 }

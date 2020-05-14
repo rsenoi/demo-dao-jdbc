@@ -1,12 +1,15 @@
 package br.com.trainning.dao;
 
+import br.com.trainning.model.Department;
 import br.com.trainning.model.Seller;
 import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 public class SellerDAO extends ConnectAbstract implements InterfaceSellerDAO {
 
@@ -14,20 +17,45 @@ public class SellerDAO extends ConnectAbstract implements InterfaceSellerDAO {
 		super(con);
 	}
 
+	private Seller instatiateSeller(ResultSet rs, Department dep) throws SQLException {
+		Seller Seller = new Seller();
+
+		Seller.setId(rs.getInt("Id"));
+		Seller.setName(rs.getString("Name"));
+		Seller.setEmail(rs.getString("Email"));
+		Seller.setBirthdate(rs.getDate("BirthDate"));
+		Seller.setBaseSalary(rs.getDouble("BaseSalary"));
+		Seller.setDepartment(dep);
+		
+		return Seller;
+	}
+
+
+	private Department instantiateDepartment(ResultSet rs) throws SQLException {
+		Department dep = new Department();
+		
+		dep.setId(rs.getInt("DepartmentId"));
+		dep.setName(rs.getString("DepName"));
+		
+		return dep;
+	}
+
+
+	
 	@Override
 	public String inserir(Seller Seller) {
-
-		String sql = "insert into coursejdbc.Seller (Id, Name, Email, Birthdate, BaseSalary, DepartmentId) values (?, ?, ?, ?, ?, ?)";
+/*
+		String sql = "insert into coursejdbc.Seller (Name, Email, Birthdate, BaseSalary, DepartmentId) values ( ?, ?, ?, ?, ?)";
 
 		try {
 			PreparedStatement sel = getCon().prepareStatement(sql);
 			// Posicao da ? ficar atento a sequencia
-			sel.setInt(1, Seller.getId());
-			sel.setString(2, Seller.getName());
-			sel.setString(3, Seller.getEmail());
-			sel.setDate(4, Seller.getBirthdate());
-			sel.setDouble(5, Seller.getBaseSalary());
-			sel.setInt(6, Seller.getDepartmentId());
+			
+			sel.setString(1, Seller.getName());
+			sel.setString(2, Seller.getEmail());
+			sel.setDate(3, Seller.getBirthdate());
+			sel.setDouble(4, Seller.getBaseSalary());
+			sel.setInt(5, Seller.getDepartmentId());
 
 			return (sel.executeUpdate() > 0 ? "Inserido com Sucesso" : "Erro ao Inserir");
 
@@ -36,12 +64,15 @@ public class SellerDAO extends ConnectAbstract implements InterfaceSellerDAO {
 			return e.getMessage();
 
 		}
+*/
+		return null;
 
 	}
 
 	@Override
 	public String alterar(Seller Seller) {
 
+		/*
 		String sql = "update coursejdbc.Seller set BaseSalary=BaseSalary + ? where DepartmentId=?";
 
 		try {
@@ -60,12 +91,14 @@ public class SellerDAO extends ConnectAbstract implements InterfaceSellerDAO {
 			return e.getMessage();
 
 		}
+*/
+		return null;
 
 	}
 
 	@Override
 	public String excluir(Seller Seller) {
-
+/*
 		String sql = "delete from coursejdbc.Seller where id=?";
 
 		try {
@@ -81,14 +114,19 @@ public class SellerDAO extends ConnectAbstract implements InterfaceSellerDAO {
 			return e.getMessage();
 
 		}
+*/
+		return null;
 
 	}
+	
 
 	@Override
 	public List<Seller> listarTodos() {
 
-		String sql = "select * from coursejdbc.Seller";
-
+		String sql = "SELECT seller.*,department.Name as DepName " + 
+				     "FROM seller INNER JOIN department " + 
+				     "ON seller.DepartmentId = department.Id ";
+				     
 		List<Seller> listaSeller = new ArrayList();
 
 		try {
@@ -99,13 +137,17 @@ public class SellerDAO extends ConnectAbstract implements InterfaceSellerDAO {
 			if (rs != null) {
 				while (rs.next()) {
 					Seller Seller = new Seller();
+					Department dep = new Department();
 					
-					Seller.setId(rs.getInt(1));
-					Seller.setName(rs.getString(2));
-					Seller.setEmail(rs.getString(3));
-					Seller.setBirthdate(rs.getDate(4));
-					Seller.setBaseSalary(rs.getDouble(5));
-					Seller.setDepartmentId(rs.getInt(6));
+					dep.setId(rs.getInt("DepartmentId"));
+					dep.setName(rs.getString("DepName"));
+					
+					Seller.setId(rs.getInt("Id"));
+					Seller.setName(rs.getString("Name"));
+					Seller.setEmail(rs.getString("Email"));
+					Seller.setBirthdate(rs.getDate("BirthDate"));
+					Seller.setBaseSalary(rs.getDouble("BaseSalary"));
+					Seller.setDepartment(dep);
 
 					listaSeller.add(Seller);
 				}
@@ -123,6 +165,92 @@ public class SellerDAO extends ConnectAbstract implements InterfaceSellerDAO {
 		}
 
 	}
+
+	@Override
+	public Seller listarUm(Integer Id) {
+
+		String sql = "SELECT seller.*,department.Name as DepName " + 
+				     "FROM seller INNER JOIN department " + 
+				     "ON seller.DepartmentId = department.Id " +
+				     "WHERE seller.Id = ?";
+				     
+		try {
+			PreparedStatement ps = getCon().prepareStatement(sql);
+
+			ps.setInt(1,Id);
+
+			ResultSet rs = ps.executeQuery();
+
+			if (rs != null) {
+				if(rs.next() ) {
+					Department dep = instantiateDepartment(rs);
+					Seller Seller = instatiateSeller(rs,dep);
+					
+					return (Seller);
+				}
+			}
+			return (null);
+
+
+		} catch (SQLException e) {
+			System.err.println(SellerDAO.class.getName());
+			return null;
+
+		}
+
+	}
+	
+
+	@Override
+	public List<Seller> listarUmDepto(Department depto) {
+
+		String sql = "SELECT seller.*,department.Name as DepName " +
+					 "FROM seller INNER JOIN department " +
+					 "ON seller.DepartmentId = department.Id " +
+					 "WHERE DepartmentId = ? " +
+					 "ORDER BY Name ";
+
+		List<Seller> listaSeller = new ArrayList();
+
+		try {
+			PreparedStatement ps = getCon().prepareStatement(sql);
+			
+			ps.setInt(1,depto.getId());
+
+			ResultSet rs = ps.executeQuery();
+			
+			Map<Integer, Department> map = new HashMap<>();
+			
+
+			if (rs != null) {
+				while(rs.next() ) {
+					Department dep = map.get(rs.getInt("DepartmentId"));
+					
+					if( dep==null) {
+						dep = instantiateDepartment(rs);
+						map.put(rs.getInt("DepartmentId"),dep);
+					}
+
+					Seller Seller = instatiateSeller(rs,dep);
+			
+					listaSeller.add(Seller);
+					
+				}
+				return (listaSeller);
+
+			} else {
+				return (null);
+			}
+
+
+		} catch (SQLException e) {
+			System.err.println(SellerDAO.class.getName());
+			return null;
+
+		}
+
+	}
+
 
 	public boolean login(int id, String name) {
 		boolean autenticado = false;
