@@ -125,7 +125,8 @@ public class SellerDAO extends ConnectAbstract implements InterfaceSellerDAO {
 
 		String sql = "SELECT seller.*,department.Name as DepName " + 
 				     "FROM seller INNER JOIN department " + 
-				     "ON seller.DepartmentId = department.Id ";
+				     "ON seller.DepartmentId = department.Id " +
+				     "ORDER BY Name ";
 				     
 		List<Seller> listaSeller = new ArrayList();
 
@@ -134,20 +135,19 @@ public class SellerDAO extends ConnectAbstract implements InterfaceSellerDAO {
 
 			ResultSet rs = ps.executeQuery();
 
+			Map<Integer, Department> map = new HashMap<>();
+
 			if (rs != null) {
 				while (rs.next()) {
-					Seller Seller = new Seller();
-					Department dep = new Department();
+
+					Department dep = map.get(rs.getInt("DepartmentId"));
 					
-					dep.setId(rs.getInt("DepartmentId"));
-					dep.setName(rs.getString("DepName"));
-					
-					Seller.setId(rs.getInt("Id"));
-					Seller.setName(rs.getString("Name"));
-					Seller.setEmail(rs.getString("Email"));
-					Seller.setBirthdate(rs.getDate("BirthDate"));
-					Seller.setBaseSalary(rs.getDouble("BaseSalary"));
-					Seller.setDepartment(dep);
+					if( dep==null) {
+						dep = instantiateDepartment(rs);
+						map.put(rs.getInt("DepartmentId"),dep);
+					}
+
+					Seller Seller = instatiateSeller(rs,dep);
 
 					listaSeller.add(Seller);
 				}
