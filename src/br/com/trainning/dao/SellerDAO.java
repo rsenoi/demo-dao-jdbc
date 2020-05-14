@@ -44,8 +44,9 @@ public class SellerDAO extends ConnectAbstract implements InterfaceSellerDAO {
 	
 	@Override
 	public String inserir(Seller Seller) {
-/*
-		String sql = "insert into coursejdbc.Seller (Name, Email, Birthdate, BaseSalary, DepartmentId) values ( ?, ?, ?, ?, ?)";
+
+		String sql = "insert into coursejdbc.Seller (Name, Email, Birthdate, BaseSalary, DepartmentId) " +
+		             "values ( ?, ?, ?, ?, ?)";
 
 		try {
 			PreparedStatement sel = getCon().prepareStatement(sql);
@@ -53,19 +54,19 @@ public class SellerDAO extends ConnectAbstract implements InterfaceSellerDAO {
 			
 			sel.setString(1, Seller.getName());
 			sel.setString(2, Seller.getEmail());
-			sel.setDate(3, Seller.getBirthdate());
+			sel.setDate(3, new java.sql.Date(Seller.getBirthdate().getTime()));
 			sel.setDouble(4, Seller.getBaseSalary());
-			sel.setInt(5, Seller.getDepartmentId());
+			sel.setInt(5, Seller.getDepartment().getId());
+			
+			int row = sel.executeUpdate();
 
-			return (sel.executeUpdate() > 0 ? "Inserido com Sucesso" : "Erro ao Inserir");
+			return (row > 0 ? "Inserido com Sucesso" : "Erro ao Inserir");
 
 		} catch (SQLException e) {
 			System.err.println(SellerDAO.class.getName());
 			return e.getMessage();
 
 		}
-*/
-		return null;
 
 	}
 
