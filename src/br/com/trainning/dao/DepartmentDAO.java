@@ -21,7 +21,7 @@ public class DepartmentDAO extends ConnectAbstract implements InterfaceDepartmen
 
 		try {
 			PreparedStatement ps = getCon().prepareStatement(sql);
-			// Posicao da ? ficar atento a sequencia
+
 			ps.setInt(1, department.getId());
 			ps.setString(2, department.getName());
 
@@ -39,13 +39,13 @@ public class DepartmentDAO extends ConnectAbstract implements InterfaceDepartmen
 	@Override
 	public String alterar(Department department) {
 
-		String sql = "update coursejdbc.departament set name=? where id=?";
+		String sql = "update coursejdbc.department set name=? where id=?";
 
 		try {
 			PreparedStatement ps = getCon().prepareStatement(sql);
 			// Posicao da ? lembrar da sequencia do sql
 			ps.setString(1, department.getName());
-			ps.setInt(4, department.getId());
+			ps.setInt(2, department.getId());
 
 			// ternario
 			return (ps.executeUpdate() > 0 ? "Alterado com Sucesso" : "Erro ao Alterar");
@@ -114,29 +114,40 @@ public class DepartmentDAO extends ConnectAbstract implements InterfaceDepartmen
 		}
 
 	}
+	
+	@Override
+	public Department listarUm(Integer Id) {
 
-	public boolean login(int id, String name) {
-		boolean autenticado = false;
-
-		String sql = "select * from coursejdbc.department where id=?";
+		String sql = "select * from coursejdbc.department Where Id = ?";
 
 		try {
-
 			PreparedStatement ps = getCon().prepareStatement(sql);
 
-			ps.setInt(1, id);
-			ps.setString(2, name);
+			ps.setInt(1, Id);
 
 			ResultSet rs = ps.executeQuery();
 
-			return rs.next() ? autenticado = true : autenticado;
+			Department department = new Department();
+
+			if (rs != null) {
+				if (rs.next()) {
+					
+					department.setId(rs.getInt(1));
+					department.setName(rs.getString(2));
+				}
+				return (department);
+
+			} else {
+				return (null);
+			}
 
 		} catch (SQLException e) {
 			System.err.println(DepartmentDAO.class.getName());
-			return false;
+			return null;
 
 		}
 
 	}
+
 
 }

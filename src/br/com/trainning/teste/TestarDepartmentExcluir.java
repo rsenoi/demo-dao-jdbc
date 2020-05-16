@@ -20,11 +20,8 @@ public class TestarDepartmentExcluir {
         
         Connection con = Conexao.abrirConexao();
         
-        Department dep = new Department();
+        Department dep = new Department(5,null);
         DepartmentDAO dao = new DepartmentDAO(con);
-        
-        dep.setId(5);
-        dep.setName("Erro5555");
         
         dao.excluir(dep);
 
