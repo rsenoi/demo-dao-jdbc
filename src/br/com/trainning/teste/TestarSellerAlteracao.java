@@ -1,6 +1,7 @@
 package br.com.trainning.teste;
 
 import java.sql.Connection;
+
 import br.com.trainning.dao.SellerDAO;
 import br.com.trainning.model.Seller;
 import br.com.trainning.util.Conexao;
@@ -12,11 +13,13 @@ public class TestarSellerAlteracao {
 		
         Connection con = Conexao.abrirConexao();
         
-        Seller sel = new Seller();
+        Seller sell = new Seller();
         SellerDAO dao = new SellerDAO(con);
-        
-        
-        dao.alterar(sel);
+       
+        sell = dao.listarUm(1);
+        sell.setName("Teste7");
+ 
+        dao.alterar(sell);
 
         Conexao.fecharConexao(con);
 	}

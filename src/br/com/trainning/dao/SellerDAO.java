@@ -73,16 +73,22 @@ public class SellerDAO extends ConnectAbstract implements InterfaceSellerDAO {
 	@Override
 	public String alterar(Seller Seller) {
 
-		/*
-		String sql = "update coursejdbc.Seller set BaseSalary=BaseSalary + ? where DepartmentId=?";
+		String sql = "UPDATE seller " + 
+				     "SET Name = ?, Email = ?, BirthDate = ?, BaseSalary = ?, DepartmentId = ? " + 
+				     "WHERE Id = ? ";
 
 		try {
-			PreparedStatement ps = getCon().prepareStatement(sql);
-			// Posicao da ? lembrar da sequencia do sql
-			ps.setDouble(1, 200.00);
-			ps.setInt(2, 2);
+			PreparedStatement sel = getCon().prepareStatement(sql);
+			
+			sel.setString(1, Seller.getName());
+			sel.setString(2, Seller.getEmail());
+			sel.setDate(3, new java.sql.Date(Seller.getBirthdate().getTime()));
+			sel.setDouble(4, Seller.getBaseSalary());
+			sel.setInt(5, Seller.getDepartment().getId());
+			sel.setInt(6, Seller.getId());
 
-			int rows = ps.executeUpdate();
+			int rows = sel.executeUpdate();
+			
 			System.out.println("Linha alteradas: " + rows);
 			// ternario
 			return ( rows > 0 ? "Alterado com Sucesso" : "Erro ao Alterar");
@@ -92,8 +98,6 @@ public class SellerDAO extends ConnectAbstract implements InterfaceSellerDAO {
 			return e.getMessage();
 
 		}
-*/
-		return null;
 
 	}
 
