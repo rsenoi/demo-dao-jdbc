@@ -12,7 +12,7 @@ public interface InterfaceSellerDAO {
     
     public String alterar(Seller Seller);
     
-    public String excluir(Seller Seller);
+    public String excluir(Integer Id);
     
     public List<Seller> listarTodos();
     

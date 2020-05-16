@@ -102,14 +102,14 @@ public class SellerDAO extends ConnectAbstract implements InterfaceSellerDAO {
 	}
 
 	@Override
-	public String excluir(Seller Seller) {
-/*
+	public String excluir(Integer Id) {
+
 		String sql = "delete from coursejdbc.Seller where id=?";
 
 		try {
 			PreparedStatement ps = getCon().prepareStatement(sql);
 			// Posicao da ? lembrar da sequencia do sql
-			ps.setInt(1, Seller.getId());
+			ps.setInt(1, Id);
 
 			// ternario
 			return (ps.executeUpdate() > 0 ? "Excluido com Sucesso" : "Erro ao Excluir");
@@ -119,8 +119,6 @@ public class SellerDAO extends ConnectAbstract implements InterfaceSellerDAO {
 			return e.getMessage();
 
 		}
-*/
-		return null;
 
 	}
 	
